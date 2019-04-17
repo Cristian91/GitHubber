@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    let presenter: LoginViewModel = LoginViewModel()
+    let viewModel: LoginViewModel = LoginViewModel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,7 +22,7 @@ class ViewController: UIViewController {
 
     // So from the requirements, I assumed that there is no need to authenticate to Github, as the api doesn't require you to be authenticated in order to perform requests. So I've just done a check on the email and password. If it were to authenticate to Github, this approach wouldn't work and the proper approach would have been, I think, to use the IBAction of the login button and use a closure to perform the segue on a valid login
     override func shouldPerformSegue(withIdentifier identifier: String, sender: Any?) -> Bool {
-        return presenter.validateLogin(userEmail: emailTextField.text, userPassword: passwordTextField.text)
+        return viewModel.validateLogin(userEmail: emailTextField.text, userPassword: passwordTextField.text)
     }
 }
 
