@@ -8,7 +8,6 @@
 
 import Foundation
 import Alamofire
-import AlamofireImage
 
 // we can define new requests by conforming to the Endpoint protocol
 protocol Endpoint {
@@ -21,14 +20,11 @@ enum Repo: Endpoint
 {
     // use an associated value to keep the number of repos we want to retrieve
     case getRepositories(numberOfRepositories:Int)
-    // I defined this case too even though I eventually didn't use it
-    case getImageFromUrlString(urlString:String)
     
     // specify the base path of the intended method; usually it would be a common basePath, but for downloading the image we would have an entire path
     public var basePath: String {
         switch self {
         case .getRepositories(_): return "https://api.github.com/"
-        case .getImageFromUrlString(let urlString): return urlString
         }
     }
     
@@ -36,7 +32,6 @@ enum Repo: Endpoint
     public var path: String? {
         switch self {
         case .getRepositories(_): return "search/repositories"
-        case .getImageFromUrlString(_): return nil
         }
     }
     
@@ -56,7 +51,6 @@ final class HomeNetworkClient {
         
         switch endpoint {
         case .getRepositories(let number):
-            sessionManager = Alamofire.SessionManager.default
             // we can use the HomeRequestAdapter to adapt the request before sending it;
             sessionManager.adapter = HomeRequestAdapter(numberOfEntries: number)
             if let appendingPath = endpoint.path {
@@ -70,19 +64,6 @@ final class HomeNetworkClient {
                     completion(Result.failure(error))
                 }
             }
-            
-        // initially, I wanted to use AlamofireImage to download images and store them into the model from HomeViewModel, but that would have implied to update the model and refresh the table view (or maybe there are other powers of AlamofireImage which I am now aware of), and then I turned on the SDWebImage since this could be achieved using a single line of code
-        case .getImageFromUrlString(let imagePath):
-            sessionManager = Alamofire.SessionManager(configuration: URLSessionConfiguration.background(withIdentifier: imagePath))
-            sessionManager.request(url, method: endpoint.method).responseImage { dataResponse in
-                switch dataResponse.result {
-                case .success(let data):
-                    completion(Result.success(data))
-                case .failure(let error):
-                    completion(Result.failure(error))
-                }
-            }
-            break
         }
     }
 }

@@ -13,15 +13,15 @@ class HomeViewController: UITableViewController {
     
     @IBAction func sortControlAction(_ sender: Any) {
         if let segmentedControl = sender as? UISegmentedControl {
-            viewModel.sortAndRefresh(segmentedControl.selectedSegmentIndex == 0 ? .stars : .alphabetically)
+            presenter.sortAndRefresh(segmentedControl.selectedSegmentIndex == 0 ? .stars : .alphabetically)
         }
     }
     
-    var viewModel = HomeViewModel()
+    var presenter = HomePresenter()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        viewModel.viewController = self
+        presenter.viewController = self
     }
 }
 
@@ -32,13 +32,13 @@ extension HomeViewController {
     }
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.repository.items.count
+        return presenter.repository.items.count
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "GitCell", for: indexPath)
-        cell.textLabel?.text = viewModel.repository.items[indexPath.row].repoName
-        cell.imageView?.sd_setImage(with: URL(string: viewModel.repository.items[indexPath.row].owner.avatar_url), placeholderImage: UIImage(named: "placeholderImg"))
+        cell.textLabel?.text = presenter.repository.items[indexPath.row].repoName
+        cell.imageView?.sd_setImage(with: URL(string: presenter.repository.items[indexPath.row].owner.avatar_url), placeholderImage: UIImage(named: "placeholderImg"))
         return cell
     }
     

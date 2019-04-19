@@ -1,5 +1,5 @@
 //
-//  LoginViewModel.swift
+//  LoginPresenter.swift
 //  GitHubber
 //
 //  Created by Cristi on 15/04/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-struct LoginViewModel {
+struct LoginPresenter {
     func validateLogin(userEmail email: String?, userPassword password: String?) -> Bool {
         guard let email = email, let password = password else {
             return false

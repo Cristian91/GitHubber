@@ -6,7 +6,6 @@ target 'GitHubber' do
   use_frameworks!
 
   pod 'Alamofire'
-  pod 'AlamofireImage', '~> 3.4.0'
   pod 'SDWebImage'
 
   target 'GitHubberTests' do

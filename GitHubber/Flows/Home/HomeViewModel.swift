@@ -1,5 +1,5 @@
 //
-//  HomeViewModel.swift
+//  HomePresenter.swift
 //  GitHubber
 //
 //  Created by Cristi on 16/04/2019.
@@ -20,8 +20,8 @@ enum RepositorySorting {
     case alphabetically
 }
 
-class HomeViewModel {
-    // the datasource for this view model
+class HomePresenter {
+    // the datasource for this presenter
     var repository: GitRepo = GitRepo(items: [])
     // define the initial sort state
     var sorting: RepositorySorting = .stars
@@ -53,16 +53,21 @@ class HomeViewModel {
         networkClient.request(for: repo) { [weak self] result in
             switch result {
             case .success(let data):
-                do {
-                    let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
-                    self?.buildRepositoryObject(from: jsonData)
-                } catch {
-                    print(error.localizedDescription)
-                }
+                self?.handleReceivedData(data)
             case .failure(let error):
                 print(error)
             }
         }
+    }
+    
+    private func handleReceivedData(_ data: Any) {
+        do {
+            let jsonData = try JSONSerialization.data(withJSONObject: data, options: [])
+            buildRepositoryObject(from: jsonData)
+        } catch {
+            print(error.localizedDescription)
+        }
+
     }
     
     func buildRepositoryObject(from jsonData: Data) {

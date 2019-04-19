@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     
-    let viewModel: LoginViewModel = LoginViewModel()
+    let viewModel = LoginPresenter()
     
     override func viewDidLoad() {
         super.viewDidLoad()

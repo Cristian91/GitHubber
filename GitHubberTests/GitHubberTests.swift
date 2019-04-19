@@ -11,8 +11,8 @@ import XCTest
 
 class GitHubberTests: XCTestCase {
     
-    let loginViewModel: LoginViewModel = LoginViewModel()
-    let homeViewModel: HomeViewModel = HomeViewModel()
+    let loginPresenter = LoginPresenter()
+    let homePresenter = HomePresenter()
 
     override func setUp() {
     }
@@ -21,27 +21,27 @@ class GitHubberTests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
-    func testLoginVM() {
-        XCTAssertFalse(loginViewModel.validateLogin(userEmail: nil, userPassword: nil), "we should pass in an username and password")
-        XCTAssertFalse(loginViewModel.validateLogin(userEmail: "test", userPassword: nil), "we should pass in a password")
-        XCTAssertFalse(loginViewModel.validateLogin(userEmail: "test", userPassword: "test"), "this is not a valid email")
-        XCTAssertFalse(loginViewModel.validateLogin(userEmail: "test@test.", userPassword: "test"), "this is not a valid email either")
-        XCTAssertFalse(loginViewModel.validateLogin(userEmail: nil, userPassword: "password"), "we should pass in an email")
-        XCTAssertFalse(loginViewModel.validateLogin(userEmail: "test@test.com", userPassword: "12345"), "we made a convention that the passwork should have at least 6 characters")
-        XCTAssertTrue(loginViewModel.validateLogin(userEmail: "test@test.com", userPassword: "123456"), "now we should be ok")
+    func testLoginPresenter() {
+        XCTAssertFalse(loginPresenter.validateLogin(userEmail: nil, userPassword: nil), "we should pass in an username and password")
+        XCTAssertFalse(loginPresenter.validateLogin(userEmail: "test", userPassword: nil), "we should pass in a password")
+        XCTAssertFalse(loginPresenter.validateLogin(userEmail: "test", userPassword: "test"), "this is not a valid email")
+        XCTAssertFalse(loginPresenter.validateLogin(userEmail: "test@test.", userPassword: "test"), "this is not a valid email either")
+        XCTAssertFalse(loginPresenter.validateLogin(userEmail: nil, userPassword: "password"), "we should pass in an email")
+        XCTAssertFalse(loginPresenter.validateLogin(userEmail: "test@test.com", userPassword: "12345"), "we made a convention that the passwork should have at least 6 characters")
+        XCTAssertTrue(loginPresenter.validateLogin(userEmail: "test@test.com", userPassword: "123456"), "now we should be ok")
     }
     
-    func testHomeVM() {
+    func testHomePresenter() {
         // For the home view model, we can pass in arbitrary data, valid and invalid, and see how the repository property will behave
         let validDataWith2Entries = GitHubberTests.testGithubJson.data(using: .utf8)
-        homeViewModel.buildRepositoryObject(from: validDataWith2Entries!)
-        XCTAssertEqual(homeViewModel.repository.items.count, 2, "we should have two items stored in the repository")
-        homeViewModel.sortAndRefresh(.stars)
-        XCTAssertGreaterThan(homeViewModel.repository.items[0].starsCount, homeViewModel.repository.items[1].starsCount, "the first item in the array should be the one with the most stars")
-        XCTAssertEqual(homeViewModel.repository.items[0].repoName, "Moya/Moya", "Moya should be the first element")
+        homePresenter.buildRepositoryObject(from: validDataWith2Entries!)
+        XCTAssertEqual(homePresenter.repository.items.count, 2, "we should have two items stored in the repository")
+        homePresenter.sortAndRefresh(.stars)
+        XCTAssertGreaterThan(homePresenter.repository.items[0].starsCount, homePresenter.repository.items[1].starsCount, "the first item in the array should be the one with the most stars")
+        XCTAssertEqual(homePresenter.repository.items[0].repoName, "Moya/Moya", "Moya should be the first element")
         let emptyData = "".data(using: .utf8)
-        homeViewModel.buildRepositoryObject(from: emptyData!)
-        XCTAssertEqual(homeViewModel.repository.items.count, 2, "An empty data / invalid data case should be catched and the model shouldn't be modified")
+        homePresenter.buildRepositoryObject(from: emptyData!)
+        XCTAssertEqual(homePresenter.repository.items.count, 2, "An empty data / invalid data case should be catched and the model shouldn't be modified")
     }
 
     static var testGithubJson: String {
